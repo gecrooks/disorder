@@ -100,8 +100,8 @@ def test_logexpit() -> None:
         x = normal()
         assert np.isclose(_logexpit(x), np.log(expit(x)))
 
-    assert np.isclose(_logexpit(-1000), -1000.0)
-    assert np.isclose(_logexpit(1000), 0.0)
+    assert np.isclose(_logexpit(-1000.0), -1000.0)  # type: ignore
+    assert np.isclose(_logexpit(1000.0), 0.0)  # type: ignore
 
 
 def test_fenergy_symmetric_bar() -> None:

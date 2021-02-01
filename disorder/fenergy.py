@@ -4,10 +4,10 @@
 # the LICENSE.txt file in the root directory of this source tree.
 
 
-from typing import Any as ArrayLike  # from numpy.typing import ArrayLike  # numpy v1.20
 from typing import Tuple
 
 import numpy as np
+from numpy.typing import ArrayLike  # numpy v1.20
 from scipy import optimize
 from scipy.special import expit  # Logistic sigmoid function: expit(x) = 1/(1+exp(-x))
 from scipy.special import logsumexp
@@ -58,29 +58,28 @@ def fenergy_bar(
 
     """
 
-    work_f = np.asarray(work_f, dtype=np.float64)
-    work_r = np.asarray(work_r, dtype=np.float64)
+    W_f = np.asarray(work_f, dtype=np.float64)
+    W_r = np.asarray(work_r, dtype=np.float64)
 
     if weights_f is None:
-        weights_f = np.ones_like(work_f)
-    else:
-        weights_f = np.asarray(weights_f, dtype=np.float64)
+        weights_f = np.ones_like(W_f)
+    weights_f = np.asarray(weights_f, dtype=np.float64)
 
     if weights_r is None:
-        weights_r = np.ones_like(work_r)
-    else:
-        weights_r = np.asarray(weights_r, dtype=np.float64)
+        weights_r = np.ones_like(W_r)
+    weights_r = np.asarray(weights_r, dtype=np.float64)
 
     N_f = sum(weights_f)
     N_r = sum(weights_r)
     M = np.log(N_f / N_r)
 
-    lower = min(np.amin(work_f), np.amin(-work_r))
-    upper = max(np.amax(work_f), np.amax(-work_r))
+    lower = min(np.amin(W_f), np.amin(-W_r))
+    upper = max(np.amax(W_f), np.amax(-W_r))
 
     def _bar(delta_fenergy: float) -> float:
-        diss_f = work_f - delta_fenergy + M
-        diss_r = work_r + delta_fenergy - M
+
+        diss_f = W_f - delta_fenergy + M
+        diss_r = W_r + delta_fenergy - M
 
         f = np.log(np.sum(weights_f * expit(-diss_f)))
         r = np.log(np.sum(weights_r * expit(-diss_r)))
@@ -112,7 +111,7 @@ def fenergy_bar(
     elif uncertainty_method == "Logistic":
         # MBAR error with a correction for non-overlapping work distributions
         mbar_err = np.sqrt(1.0 / (slogF - slogF2 + slogR - slogR2) - nratio)
-        min_hysteresis = min(work_f) + min(work_r)
+        min_hysteresis = np.min(work_f) + np.min(work_r)
         logistic_err = np.sqrt((min_hysteresis ** 2 + 4 * np.pi ** 2) / 12)
         err = min(logistic_err, mbar_err)
     else:
@@ -190,6 +189,8 @@ def fenergy_symmetric_bar(
         Estimated free energy difference to the middle point of the protocol, and
         an estimated error
     """
+    work_ab = np.asarray(work_ab, dtype=np.float64)
+    work_bc = np.asarray(work_bc, dtype=np.float64)
 
     weights_r = np.exp(-work_ab - fenergy_logmeanexp(work_ab))
     return fenergy_bar(work_ab, work_bc, None, weights_r, uncertainty_method)
@@ -207,6 +208,9 @@ def fenergy_symmetric_nnznm(work_ab: ArrayLike, work_bc: ArrayLike) -> float:
     Returns:
         Estimate of the free energy
     """
+    work_ab = np.asarray(work_ab, dtype=np.float64)
+    work_bc = np.asarray(work_bc, dtype=np.float64)
+
     delta_fenegy = (
         -np.log(2)
         + fenergy_logmeanexp(-work_ab)
