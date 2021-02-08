@@ -80,7 +80,8 @@ about:	## Report versions of dependent packages
 
 status:  ## git status -uno
 	@echo
-	@git status -uno
+	@git status --short --branch
+	@echo
 
 build: ## Setuptools build
 	./setup.py clean --all

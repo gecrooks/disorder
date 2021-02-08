@@ -126,9 +126,6 @@ def fenergy_bayesian(work_f: ArrayLike, work_r: ArrayLike) -> Tuple[float, float
     Args:
         work_f: Measurements of work from forward protocol.
         work_r: Measurements of work from reverse protocol.
-        weights_f:  Optional weights for forward works
-        weights_r:  Optional weights for reverse works
-        uncertainty_method: Method to calculate errors ("BAR", "MBAR", or "Logistic")
 
     Returns:
         Posterior mean estimate of the free energy difference, and the estimated error
@@ -144,6 +141,7 @@ def fenergy_bayesian(work_f: ArrayLike, work_r: ArrayLike) -> Tuple[float, float
 def fenergy_posterior(
     work_f: ArrayLike, work_r: ArrayLike
 ) -> Tuple[np.ndarray, np.ndarray]:
+    """DOCME"""
 
     w_f = np.asarray(work_f, dtype=np.float64)
     w_r = np.asarray(work_r, dtype=np.float64)
