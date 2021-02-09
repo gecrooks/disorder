@@ -5,7 +5,7 @@
 .DEFAULT_GOAL := help
 
 NAME = disorder
-FILES = $(NAME) docs/conf.py setup.py
+FILES = $(NAME) docs/conf.py setup.py examples
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -27,9 +27,9 @@ lint:		## Lint check python source
 
 delint:   ## Run isort and black to delint project
 	@echo	
-	isort $(NAME)
+	isort $(FILES)
 	@echo
-	black $(NAME)
+	black $(FILES)
 	@echo
 
 typecheck:	## Static typechecking 

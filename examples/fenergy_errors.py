@@ -3,14 +3,7 @@
 #
 import numpy as np
 
-
-from disorder import (
-    fenergy_bar,
-    fenergy_bayesian
-)
-
-
-
+from disorder import fenergy_bar, fenergy_bayesian
 
 fe = 0
 diss = 100
@@ -24,16 +17,14 @@ def errors(diss, count):
 
     print()
     print(f"Gaussian work, count: {count}, mean dissipation: {diss} kT")
-    print("BAR error:", fenergy_bar(work_f, work_r, uncertainty_method = "BAR")[1])
-    print("MBAR error:", fenergy_bar(work_f, work_r, uncertainty_method = "MBAR")[1])
+    print("BAR error:", fenergy_bar(work_f, work_r, uncertainty_method="BAR")[1])
+    print("MBAR error:", fenergy_bar(work_f, work_r, uncertainty_method="MBAR")[1])
     print("Bayesian error:", fenergy_bayesian(work_f, work_r)[1])
-    print("Logistic approx:", fenergy_bar(work_f, work_r, uncertainty_method = "Logistic")[1])
+    print(
+        "Logistic approx:",
+        fenergy_bar(work_f, work_r, uncertainty_method="Logistic")[1],
+    )
 
 
 errors(10, 1000)
 errors(100, 1000)
-
-
-
-
-
